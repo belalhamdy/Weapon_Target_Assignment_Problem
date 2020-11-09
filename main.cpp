@@ -4,8 +4,9 @@
 using namespace std;
 
 int main() {
-    cout << "Enter the weapon types and the number of instances of each type: (Enter 'x' when you’re done)" << endl;
+    cout << "Enter the weapon types and the number of instances of each type: (Enter 'x' when you're done)" << endl;
     int nWeapons = 0;
+
     while (true) {
         string name;
         int count;
@@ -15,15 +16,17 @@ int main() {
         //do something with name and count
         ++nWeapons;
     }
+
     cout << "Enter the number of targets:" << endl;
     int nTargets;
     cin >> nTargets;
+
     cout << "Enter the threat coefficient of each target:" << endl;
     vector<int> threat(nTargets);
     for (int &cur : threat)
         cin >> cur;
 
-    cout << "Enter the weapons’ success probabilities matrix:" << endl;
+    cout << "Enter the weapons' success probabilities matrix:" << endl;
     vector<vector<double>> success(nWeapons, vector<double>(nTargets));
     for (int i = 0; i < nWeapons; ++i)
         for (int j = 0; j < nTargets; ++j)
