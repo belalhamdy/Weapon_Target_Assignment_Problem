@@ -31,14 +31,16 @@ struct GeneticAlgorithm {
             data[mutateIdx(g_RNG)] = mutateValue(g_RNG);
         }
 
-        Chromosome combineWith(const Chromosome &other) const {
-            Chromosome ret = *this;
+        pair<Chromosome, Chromosome> combineWith(const Chromosome &other) const {
+            Chromosome ret1 = *this;
+            Chromosome ret2 = other;
             uniform_int_distribution<int> mutateOffset(0, data.size());
             int off = mutateOffset(g_RNG);
             for (int i = 0; i < off; ++i) {
-                ret.data[i] = other.data[i];
+                ret1.data[i] = other.data[i];
+                ret2.data[i] = this->data[i];
             }
-            return ret;
+            return {ret1, ret2};
         }
 
     };
@@ -51,7 +53,7 @@ struct GeneticAlgorithm {
     GeneticAlgorithm(const vector<int> &wi,
                      const vector<int> &th,
                      const vector<vector<double>> &su, int populationSize)
-            : weaponInstances(wi), threat(th), success(su), population(populationSize) {
+            : weaponInstances(wi), threat(th), success(su) {
 
         for (int i = 0; i < populationSize; ++i) {
             Chromosome curr(wi.size(), su[0].size());
@@ -80,7 +82,7 @@ struct GeneticAlgorithm {
         for (auto &i : population) totalFitness += i.second;
         for (auto &i : population) probs.push_back(i.second /= totalFitness);
 
-        discrete_distribution<> rouletteWheel(probs.begin(),probs.end());
+        discrete_distribution<> rouletteWheel(probs.begin(), probs.end());
         Chromosome firstParent = population[rouletteWheel(g_RNG)].first;
         Chromosome secondParent = population[rouletteWheel(g_RNG)].first;
 
@@ -122,15 +124,9 @@ int main() {
             cin >> success[i][j];
 
     cout << "Please wait while running the GA..." << endl;
-    GeneticAlgorithm ga(weaponInstances, threat, success, 5);
-    GeneticAlgorithm::Chromosome a(5, 5);
-    a.data[0] = 0;
-    a.data[1] = 2;
-    a.data[2] = 0;
-    a.data[3] = 1;
-    a.data[4] = 1;
+
     //Do processing here
-    cout << ga.getFitness(a) << endl;
+
     cout << "The final WTA solution is:" << endl;
     /*
     Tank #1 is assigned to target #1,
