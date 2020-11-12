@@ -27,23 +27,29 @@ struct GeneticAlgorithm {
     struct Chromosome {
         vector<int> data;
         int maxValue;
-        Chromosome(int nSize, int maxValue) : maxValue(maxValue) {
+        Chromosome(int nSize, int maxValue) : maxValue(maxValue), data(nSize) {
             uniform_int_distribution<int> uid(0, maxValue);
-            data.resize(nSize);
-            for (int &v : data) {
+            for (int &v : data)
                 v = uid(g_RNG);
-            }
         }
+
         void mutate() {
             uniform_int_distribution<int> mutateIdx(0, data.size() - 1);
             uniform_int_distribution<int> mutateValue(0, maxValue);
             data[mutateIdx(g_RNG)] = mutateValue(g_RNG);
         }
-        Chromosome combineWith(const Chromosome &other) {
-            //TODO
-            return Chromosome(0,0);
+        
+        Chromosome combineWith(const Chromosome &other) const {
+            Chromosome ret = *this;
+            uniform_int_distribution<int> mutateOffset(0, data.size());
+            int off = mutateOffset(g_RNG);
+            for (int i = 0; i < off; ++i) {
+                ret.data[i] = other.data[i];
+            }
+            return ret;
         }
     };
+    
     double getFitness(const Chromosome &ch) {
         vector<double> survive;
         survive.assign(threat.size(), 1.0);
