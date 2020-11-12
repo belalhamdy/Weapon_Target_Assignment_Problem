@@ -6,27 +6,19 @@
 using namespace std;
 
 mt19937 g_RNG(chrono::steady_clock::now().time_since_epoch().count());
+
 /*
  * Generate Random Chromosomes (Done)
  * Calculate fitness foreach (Done)
  * pick the parents to mate
- * crossover
+ * crossover (Done)
  * mutate (Done)
  */
 struct GeneticAlgorithm {
-    const vector<int> &weaponInstances;
-    const vector<vector<double>> &success;
-    const vector<int> &threat;
-
-    GeneticAlgorithm(const vector<int> &wi,
-                     const vector<int> &th,
-                     const vector<vector<double>> &su)
-            : weaponInstances(wi), threat(th), success(su) {
-    }
-
     struct Chromosome {
         vector<int> data;
         int maxValue;
+
         Chromosome(int nSize, int maxValue) : maxValue(maxValue), data(nSize) {
             uniform_int_distribution<int> uid(0, maxValue);
             for (int &v : data)
@@ -38,7 +30,7 @@ struct GeneticAlgorithm {
             uniform_int_distribution<int> mutateValue(0, maxValue);
             data[mutateIdx(g_RNG)] = mutateValue(g_RNG);
         }
-        
+
         Chromosome combineWith(const Chromosome &other) const {
             Chromosome ret = *this;
             uniform_int_distribution<int> mutateOffset(0, data.size());
@@ -48,8 +40,25 @@ struct GeneticAlgorithm {
             }
             return ret;
         }
+
     };
-    
+
+    const vector<int> &weaponInstances;
+    const vector<vector<double>> &success;
+    const vector<int> &threat;
+    vector<pair<Chromosome, double>> population;
+
+    GeneticAlgorithm(const vector<int> &wi,
+                     const vector<int> &th,
+                     const vector<vector<double>> &su, int populationSize)
+            : weaponInstances(wi), threat(th), success(su), population(populationSize) {
+
+        for (int i = 0; i < populationSize; ++i) {
+            Chromosome curr(wi.size(), su[0].size());
+            population.emplace_back(curr, getFitness(curr));
+        }
+    }
+
     double getFitness(const Chromosome &ch) {
         vector<double> survive;
         survive.assign(threat.size(), 1.0);
@@ -64,6 +73,21 @@ struct GeneticAlgorithm {
         }
         return ans;
     }
+
+    void nextGeneration() {
+        double totalFitness = 0.0;
+        vector<double> probs;
+        for (auto &i : population) totalFitness += i.second;
+        for (auto &i : population) probs.push_back(i.second /= totalFitness);
+
+        discrete_distribution<> rouletteWheel(probs.begin(),probs.end());
+        Chromosome firstParent = population[rouletteWheel(g_RNG)].first;
+        Chromosome secondParent = population[rouletteWheel(g_RNG)].first;
+
+        // TODO: Here you have 2 parents mutate them and generate the next generation and fill it in the population
+    }
+
+
 };
 
 int main() {
@@ -98,8 +122,8 @@ int main() {
             cin >> success[i][j];
 
     cout << "Please wait while running the GA..." << endl;
-    GeneticAlgorithm ga(weaponInstances,threat,success);
-    GeneticAlgorithm::Chromosome a(5,5);
+    GeneticAlgorithm ga(weaponInstances, threat, success, 5);
+    GeneticAlgorithm::Chromosome a(5, 5);
     a.data[0] = 0;
     a.data[1] = 2;
     a.data[2] = 0;
