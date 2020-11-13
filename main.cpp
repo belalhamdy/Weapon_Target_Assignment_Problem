@@ -30,7 +30,7 @@ public:
         data[mutateIdx(g_RNG)] = mutateValue(g_RNG);
     }
 
-    [[nodiscard]] pair<Chromosome, Chromosome> combineWith(const Chromosome &other) const {
+    [[nodiscard]] pair<Chromosome, Chromosome> combineWith(const Chromosome &other) const{
         Chromosome ret1 = *this;
         Chromosome ret2 = other;
         uniform_int_distribution<int> mutateOffset(0, data.size());
@@ -96,8 +96,11 @@ class GeneticAlgorithm {
         pair<Chromosome, Chromosome> offSprings = firstParent.combineWith(secondParent);
 
         // remove the parents from the population
-        population.erase(population.begin() + max(firstParentIdx, secondParentIdx));
-        population.erase(population.begin() + min(firstParentIdx, secondParentIdx));
+        iter_swap(population.begin() + firstParentIdx, population.end() - 1);
+        iter_swap(population.begin() + secondParentIdx, population.end() - 2);
+
+        population.pop_back();
+        population.pop_back();
 
         // mutate children
         offSprings.first.mutate();
