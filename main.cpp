@@ -20,9 +20,9 @@ mt19937 g_RNG(chrono::steady_clock::now().time_since_epoch().count());
 class Chromosome {
 public:
     vector<int> data;
-    int maxValue;
+    int maxValue = 0;
 
-    Chromosome(){}
+    Chromosome()= default;
     Chromosome(int nSize, int maxValue) : maxValue(maxValue), data(nSize) {
         uniform_int_distribution<int> uid(0, maxValue);
         for (int &v : data)
