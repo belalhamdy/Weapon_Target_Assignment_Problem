@@ -10,13 +10,7 @@ using namespace std;
 
 mt19937 g_RNG(chrono::steady_clock::now().time_since_epoch().count());
 
-/*
- * Generate Random Chromosomes (Done)
- * Calculate fitness foreach (Done)
- * pick the parents to mate
- * crossover (Done)
- * mutate (Done)
- */
+
 class Chromosome {
 public:
     vector<int> data;
