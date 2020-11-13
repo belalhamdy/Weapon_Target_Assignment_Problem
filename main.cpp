@@ -22,7 +22,8 @@ public:
     vector<int> data;
     int maxValue = 0;
 
-    Chromosome()= default;
+    Chromosome() = default;
+
     Chromosome(int nSize, int maxValue) : maxValue(maxValue), data(nSize) {
         uniform_int_distribution<int> uid(0, maxValue);
         for (int &v : data)
@@ -137,7 +138,7 @@ public:
             population.push_back(curr);
         }
 
-        for (const auto & i : population) {
+        for (const auto &i : population) {
             double currFitness = getFitness(i);
             if (currFitness < bestFitness) {
                 bestChromosome = i;
@@ -206,8 +207,8 @@ int main() {
     for (int i = 0; i < solutionData.size(); ++i) {
         int currWeaponInstance = weaponInstances[i];
         cout << weapons[currWeaponInstance] << " " << "#" <<
-        weaponCount[currWeaponInstance] - --weaponCountTemp[currWeaponInstance] <<
-        " is assigned to target #" << solutionData[i] << ",\n";
+             weaponCount[currWeaponInstance] - --weaponCountTemp[currWeaponInstance] <<
+             " is assigned to target #" << solutionData[i] << ",\n";
     }
     cout << "The expected total threat of the surviving targets is " << solution.second << endl;
 
