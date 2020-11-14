@@ -30,19 +30,27 @@ public:
         data[mutateIdx(g_RNG)] = mutateValue(g_RNG);
     }
 
-    [[nodiscard]] pair<Chromosome, Chromosome> combineWith(const Chromosome &other) const{
+    [[nodiscard]] pair<Chromosome, Chromosome> combineWith(const Chromosome &other) const {
+        if (this->data == other.data) return {*this, other};
+
         Chromosome ret1 = *this;
         Chromosome ret2 = other;
+
         uniform_int_distribution<int> mutateOffset(0, data.size());
         int off = mutateOffset(g_RNG);
+
         for (int i = 0; i < off; ++i) {
             ret1.data[i] = other.data[i];
             ret2.data[i] = this->data[i];
         }
+
         return {ret1, ret2};
     }
 
+
 };
+
+
 
 class GeneticAlgorithm {
     const vector<int> &weaponInstances;
