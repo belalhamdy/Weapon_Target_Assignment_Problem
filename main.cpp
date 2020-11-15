@@ -88,7 +88,10 @@ class GeneticAlgorithm {
         vector<double> probs;
         double totalFitness = 0.0;
 
-        for (auto &i : chromosomesFitness) totalFitness += i;
+        for (auto &i : chromosomesFitness){
+            i = 1/i; // to give the lowest fitness higher probability
+            totalFitness += i;
+        }
         probs.reserve(chromosomesFitness.size());
         for (auto &i : chromosomesFitness) probs.push_back(i /= totalFitness);
 
