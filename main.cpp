@@ -100,8 +100,8 @@ class GeneticAlgorithm {
 
         // select 2 parents
         int firstParentIdx = rouletteWheel(g_RNG), secondParentIdx = rouletteWheel(g_RNG);
-        Chromosome firstParent = population[0];
-        Chromosome secondParent = population[1];
+        Chromosome firstParent = population[firstParentIdx];
+        Chromosome secondParent = population[secondParentIdx];
 
         // get the children
         pair<Chromosome, Chromosome> offSprings = firstParent.combineWith(secondParent);
