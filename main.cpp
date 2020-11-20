@@ -97,7 +97,11 @@ class GeneticAlgorithm {
 
         // Roulette wheel construction
         discrete_distribution<> rouletteWheel(probs.begin(), probs.end());
-
+        /* TODO: when you discuss you have to fix 3 things:
+         * 1- Add line 92 `i = 1/i`
+         * 2- Replace `0` in line 103 with `firstParentIdx`
+         * 3- Replace `1` in line 104 with `secondParentIdx`
+        */
         // select 2 parents
         int firstParentIdx = rouletteWheel(g_RNG), secondParentIdx = rouletteWheel(g_RNG);
         Chromosome firstParent = population[firstParentIdx];
